@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<h1>Speech Emotion Detection</h1>
+    <div class="center">
+        <a href="/user/signout" class="btn btn--secondary">Sign Out</a>
+    </div>
+    <h1>Enter Your Audio</h1>
+    <div id="controls">
+     <button id="recordButton">Record</button>
+     <button id="pauseButton" disabled>Pause</button>
+     <button id="stopButton" disabled>Stop</button>
+    </div>
+    <p><strong>Recordings:</strong></p>
+    <ol id="recordingsList" class="center"></ol>
+
+    <!-- <p>
+        <strong>ID:</strong> {{ session['user']['_id'] }}<br>
+        <strong>Name:</strong> {{ session['user']['name'] }}<br>
+        <strong>Email:</strong> {{ session['user']['email'] }}
+    </p> -->
+{% endblock %}
