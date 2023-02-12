@@ -1,26 +1,26 @@
 {% extends "layout.html" %}
 
 {% block body %}
-<section class="side">
-   <img src="{{ url_for('static',filename='images/img.svg') }}" alt="">
-</section>
 
 <section class="main">
+  <section class="side">
+    <img src="{{ url_for('static',filename='images/img.svg') }}" alt="">
+  </section>
    <div class="login-container">
       <p class="title">Sign Up </p>
       <div class="separator"></div>
-      <p class="welcome-message">Please, provide sign-up credential to proceed and have access to all our services</p>
+      <p class="welcome-message" style="margin-bottom: 10px;">Please, provide sign-up credential to proceed and have access to all our services</p>
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <script>
-          var messages = {{ messages | safe }};
-          for (var i=0; i<messages.length; i++) {
-            alert(messages[i]);
-          }
-        </script>
-      {% endif %}
-    {% endwith %}
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <script>
+            var messages = {{ messages | safe }};
+            for (var i=0; i<messages.length; i++) {
+              alert(messages[i]);
+            }
+          </script>
+        {% endif %}
+      {% endwith %}
 
       <form class="login-form" method="post" action="/auth/signup">
             <div class="form-control">

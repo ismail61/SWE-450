@@ -52,7 +52,7 @@ function startRecording() {
 		audioContext = new AudioContext();
 
 		//update the format 
-		document.getElementById("formats").innerHTML="Format: 1 channel pcm @ "+audioContext.sampleRate/1000+"kHz"
+		// document.getElementById("formats").innerHTML="Format: 1 channel pcm @ "+audioContext.sampleRate/1000+"kHz"
 
 		/*  assign to gumStream for later use  */
 		gumStream = stream;
@@ -73,6 +73,7 @@ function startRecording() {
 
 	}).catch(function(err) {
 	  	//enable the record button if getUserMedia() fails
+		console.log("Recording Errro", err);
     	recordButton.disabled = false;
     	stopButton.disabled = true;
     	pauseButton.disabled = true
@@ -131,7 +132,11 @@ function createDownloadLink(blob) {
 	//save to disk link
 	link.href = url;
 	link.download = filename+".wav"; //download forces the browser to donwload the file using the  filename
-	link.innerHTML = "Save to disk";
+	link.innerHTML = "Download";
+	link.className += 'btn btn-primary';
+	link.style.position = 'relative';
+	link.style.bottom = '20px';
+	link.style.marginLeft = '10px';
 
 	//add the new audio element to li
 	li.appendChild(au);
@@ -145,33 +150,29 @@ function createDownloadLink(blob) {
 	//upload link
 	var upload = document.createElement('a');
 	upload.href="#";
-	upload.innerHTML = "Upload";
-	upload.addEventListener("click", function(event){
-		//   var xhr=new XMLHttpRequest();
-		//   xhr.onload=function(e) {
-		//       if(this.readyState === 4) {
-		//           console.log("Server returned: ",e.target.responseText);
-		//       }
-		//   };
-		//   var fd=new FormData();
-		//   fd.append("audio_data",blob, filename);
-		//   xhr.open("POST","save-record",true);
-		//   xhr.send(fd);
-
-
+	upload.innerHTML = "Predict";
+	upload.className += 'btn btn-success';
+	upload.style.position = 'relative';
+	upload.style.bottom = '20px';
+	upload.style.marginLeft = '10px';
+	upload.addEventListener("click", function(){
 		var form = new FormData();
 		form.append('file', blob, filename);
 		form.append('title', filename);
 		//Chrome inspector shows that the post data includes a file and a title.
 		$.ajax({
 			type: 'POST',
-			url: '/save-record',
+			url: '/predict-record',
 			data: form,
 			cache: false,
 			processData: false,
-			contentType: false
+			contentType: false,
+			error: function() {
+				alert('Something went wrong!');
+			}
 		}).done(function(data) {
 			console.log(data);
+			if(data) window.location.reload();
 		});
 	})
 	li.appendChild(document.createTextNode (" "))//add a space in between

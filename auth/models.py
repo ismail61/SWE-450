@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, render_template, flash, session, redirect
+from flask import request, render_template, flash, session, redirect
 from app import db
 import uuid
 
@@ -8,7 +8,6 @@ class Auth:
         del user['password']
         session['logged_in'] = True
         session['user'] = user
-        # return jsonify(user), 200
         return redirect('/')
 
     def signUp(self):
