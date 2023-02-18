@@ -28,12 +28,26 @@
     {% endwith %}
 
      <div class="container">
-        <center style="margin-bottom: 20px;">
-            <h2 style="margin-bottom: 20px; margin-top: 10px;">Record Your Audio</h2>
-            <button id="recordButton" class="btn btn-success">Start</button>
-            <button id="pauseButton" disabled class="btn btn-primary">Pause</button>
-            <button id="stopButton" disabled class="btn btn-danger">Stop</button>
-        </center>
+        <div class="row" style="margin-top: 20px;">
+            <div class="col-6">
+                <center style="margin-bottom: 30px;">
+                    <h2 style="margin-bottom: 20px; margin-top: 10px;">Record Your Audio</h2>
+                    <button id="recordButton" class="btn btn-success">Start</button>
+                    <button id="pauseButton" disabled class="btn btn-primary">Pause</button>
+                    <button id="stopButton" disabled class="btn btn-danger">Stop</button>
+                </center>
+            </div>
+            <div class="col-1">
+                <div style="border-left:1px solid #000;height:230px"></div>
+            </div>
+            <div class="col-5">
+                <form onsubmit="return fileSelectionSubmitButtonHandling(event)" method="POST" enctype="multipart/form-data" style="margin-bottom: 30px;">
+                    <h2 style="margin-bottom: 20px; margin-top: 10px;">Select your Audio</h2>
+                    <input type="file" name="selectFile" accept="audio/*" required> </br> </br>
+                    <span style="padding: 5%; margin-top: 7px;"><input type="submit" value="Predict" class="btn btn-success"></span>
+                </form>
+            </div>
+        </div>
         <p><strong>New Recordings List:</strong></p> <br>
         <ul id="recordingsList" class="center"></ul>
     </div> 

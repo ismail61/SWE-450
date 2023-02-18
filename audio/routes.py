@@ -1,12 +1,14 @@
-from flask import render_template, request, session, redirect, flash, url_for
+from flask import render_template, request, session, redirect, flash
 from app import app
 from app import db
+import os
 import uuid
 import datetime
 import cloudinary
 from cloudinary.uploader import upload
+import pickle
 
-#  Cloudinary Config
+# Cloudinary Config
 cloudinary.config(
   cloud_name = "ismail61",
   api_key = "529773689658652",
@@ -27,8 +29,8 @@ def home():
         return render_template('signin.html')
 
 
-@app.route('/predict-record', methods=['POST'])
-def predict_record():
+@app.route('/predict', methods=['POST'])
+def make_prediction():
     if 'logged_in' in session and 'user' in session:
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -52,6 +54,11 @@ def predict_record():
                 'createdAt': datetime.datetime.now(),
             })
             flash('Predict Successfully Done')
+            # print("I am running")
+            # Sub dir to speech emotion recognition model
+            # model_sub_dir = os.path.join('models', 'MODEL_CNN_LSTM.hdf5')
+            # model_sub_dir_svm = os.path.join('models')
+            # print(model_sub_dir)
             return '<h1>Success</h1>' # TODO: sucess message
         else:
             flash('Image Uploaed Failed')

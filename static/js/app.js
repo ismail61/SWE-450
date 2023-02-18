@@ -162,7 +162,7 @@ function createDownloadLink(blob) {
 		//Chrome inspector shows that the post data includes a file and a title.
 		$.ajax({
 			type: 'POST',
-			url: '/predict-record',
+			url: '/predict',
 			data: form,
 			cache: false,
 			processData: false,
@@ -180,4 +180,27 @@ function createDownloadLink(blob) {
 
 	//add the li element to the ol
 	recordingsList.appendChild(li);
+}
+
+function fileSelectionSubmitButtonHandling(event) {
+
+	event.preventDefault();
+	const form = new FormData(event.target);
+	var filename = new Date().toISOString();
+	form.append('file', form.get('selectFile'), filename);
+	form.append('title', filename);
+	$.ajax({
+		type: 'POST',
+		url: '/predict',
+		data: form,
+		cache: false,
+		processData: false,
+		contentType: false,
+		error: function() {
+			alert('Something went wrong!');
+		}
+	}).done(function(data) {
+		console.log(data);
+		if(data) window.location.reload();
+	});
 }
