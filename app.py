@@ -8,7 +8,7 @@ app.secret_key = 'super secret key'
 client = pymongo.MongoClient('mongodb://localhost:27017/')
 db = client.thesis
 
-#routes
+# routes
 from auth.routes import *
 from audio.routes import *
 

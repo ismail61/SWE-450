@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<span">
+<span>
     <nav class="navbar navbar-light bg-light">
         <div class="container">
         <div class="navbar-header" style="padding-top: 20px;">
@@ -20,6 +20,7 @@
         {% if messages %}
             <script>
             var messages = {{ messages | safe }};
+            console.log(messages)
             for (var i=0; i<messages.length; i++) {
                 alert(messages[i]);
             }
@@ -38,16 +39,23 @@
                 </center>
             </div>
             <div class="col-1">
-                <div style="border-left:1px solid #000;height:230px"></div>
+                <div style="border-left:1px solid #000;height:200px"></div>
             </div>
             <div class="col-5">
                 <form onsubmit="return fileSelectionSubmitButtonHandling(event)" method="POST" enctype="multipart/form-data" style="margin-bottom: 30px;">
                     <h2 style="margin-bottom: 20px; margin-top: 10px;">Select your Audio</h2>
                     <input type="file" name="selectFile" accept="audio/*" required> </br> </br>
-                    <span style="padding: 5%; margin-top: 7px;"><input type="submit" value="Predict" class="btn btn-success"></span>
+                    <span style="padding: 5%; margin-top: 7px;">
+                        <input id="mainBtnload" type="submit" value="Predict" class="btn btn-success">
+                    </span>
                 </form>
             </div>
         </div>
+        <center>
+            <div id="buttonload" class="btn" style="margin-top: 10px;">
+                <i class="fa fa-spinner fa-spin"></i> <b>Loading</b>
+            </div>
+        </center>
         <p><strong>New Recordings List:</strong></p> <br>
         <ul id="recordingsList" class="center"></ul>
     </div> 

@@ -122,6 +122,9 @@ function createDownloadLink(blob) {
 	var li = document.createElement('li');
 	var link = document.createElement('a');
 
+	// Loader
+	let buttonload = document.getElementById('buttonload'); 
+
 	//name of .wav file to use during upload and download (without extendion)
 	var filename = new Date().toISOString();
 
@@ -156,6 +159,8 @@ function createDownloadLink(blob) {
 	upload.style.bottom = '20px';
 	upload.style.marginLeft = '10px';
 	upload.addEventListener("click", function(){
+		buttonload.style.display = 'block';
+		upload.disabled = true;
 		var form = new FormData();
 		form.append('file', blob, filename);
 		form.append('title', filename);
@@ -168,11 +173,17 @@ function createDownloadLink(blob) {
 			processData: false,
 			contentType: false,
 			error: function() {
+				buttonload.style.display = 'none';
+				upload.disabled = false;
 				alert('Something went wrong!');
 			}
 		}).done(function(data) {
 			console.log(data);
-			if(data) window.location.reload();
+			if(data) {
+				buttonload.style.display = 'none';
+				alert(`${data} is our expected value.`)
+				window.location.reload();
+			}
 		});
 	})
 	li.appendChild(document.createTextNode (" "))//add a space in between
@@ -185,6 +196,13 @@ function createDownloadLink(blob) {
 function fileSelectionSubmitButtonHandling(event) {
 
 	event.preventDefault();
+
+	// Loader
+	let buttonload = document.getElementById('buttonload'); 
+	let mainBtnload = document.getElementById('mainBtnload'); 
+	buttonload.style.display = 'block';
+	mainBtnload.disabled = true;
+
 	const form = new FormData(event.target);
 	var filename = new Date().toISOString();
 	form.append('file', form.get('selectFile'), filename);
@@ -197,10 +215,16 @@ function fileSelectionSubmitButtonHandling(event) {
 		processData: false,
 		contentType: false,
 		error: function() {
+			buttonload.style.display = 'none';
+			mainBtnload.disabled = false;
 			alert('Something went wrong!');
 		}
 	}).done(function(data) {
 		console.log(data);
-		if(data) window.location.reload();
+		if(data) {
+			buttonload.style.display = 'none';
+			alert(`${data} is our expected value.`)
+			window.location.reload();
+		}
 	});
 }
