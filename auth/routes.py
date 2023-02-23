@@ -9,7 +9,7 @@ def signup():
     else :
          if 'logged_in' in session and 'user' in session:
             return redirect('/')
-            # return render_template('home.html')7
+            # return render_template('home.html')
          else:
             return render_template('signup.html')
 

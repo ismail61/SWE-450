@@ -2,9 +2,11 @@ from flask import render_template, request, session, redirect, flash, url_for
 from app import app
 from app import db
 import uuid
-import datetime
+from tensorflow.keras.models import load_model
 import cloudinary
+import os
 from cloudinary.uploader import upload
+from datetime import datetime
 import numpy as np
 import io
 import soundfile
@@ -12,10 +14,17 @@ import librosa
 from urllib.request import urlopen
 import pickle
 em = ['happy','sad','neutral','angry']
+# em = ['fear', 'angry', 'neutral', 'happy', 'sad', 'surprise']
+# em = ['neutral', 'calm', 'happy', 'sad', 'angry', 'fearful', 'disgust', 'surprised']
+CAT6 = ['fear', 'angry', 'neutral', 'happy', 'sad', 'surprise']
 
 # Use pickle to load in the pre-trained model.
-with open('/home/bs1040/Old_PC/University/semester8/Thesis/Project/assets/cnn_model.pkl', 'rb') as f:
-    model = pickle.load(f)
+# with open('/home/bs1040/Old_PC/University/semester8/Thesis/Project/assets/cnn_model.pkl', 'rb') as f:
+#     model = pickle.load(f)
+
+# load models
+model = load_model("/home/bs1040/Old_PC/University/semester8/Thesis/Project/assets/model3.h5")
+gmodel = load_model("/home/bs1040/Old_PC/University/semester8/Thesis/Project/assets/model_mw.h5")
 
 # Extract Feature
 def extract_feature(url, **kwargs):
@@ -50,6 +59,34 @@ def extract_feature(url, **kwargs):
             result = np.hstack((result, tonnetz))
     return result
 
+def get_mfccs(audio, limit):
+    y, sr = librosa.load(audio)
+    a = librosa.feature.mfcc(y, sr=sr, n_mfcc=40)
+    print(a)
+    if a.shape[1] > limit:
+        mfccs = a[:, :limit]
+    elif a.shape[1] < limit:
+        mfccs = np.zeros((a.shape[0], limit))
+        mfccs[:, :a.shape[1]] = a
+    return mfccs
+
+def save_audio(file):
+    if not os.path.exists("audio1"):
+        os.makedirs("audio1")
+    folder = "audio1"
+    # clear the folder to avoid storage overload
+    for filename in os.listdir(folder):
+        file_path = os.path.join(folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+        except Exception as e:
+            print('Failed to delete %s. Reason: %s' % (file_path, e))
+
+    path = 'audio1/' + file.filename + '.wav'
+    with open(path, "wb") as f:
+        f.write(file.getbuffer())
+    return 0
 
 # Cloudinary Config
 cloudinary.config(
@@ -91,19 +128,38 @@ def make_prediction():
         #  Upload Cloudinary
         uploadedResponse = upload(file,resource_type = "video",  public_id=file_name )
         if(uploadedResponse):
-            features = np.array(extract_feature(uploadedResponse['url'], mfcc=True, chroma=True, mel=True).reshape(1, -1))
-            f = np.expand_dims(features,axis=2)
-            re = (model.predict(f)[0] > 0.5).astype("int32")
-            result = re[0]
-            print("result :", em[result])
+            with soundfile.SoundFile(io.BytesIO(urlopen(uploadedResponse['url']).read())) as sound_file:
+                # features = np.array(extract_feature(uploadedResponse['url'], mfcc=True, chroma=True, mel=True).reshape(1, -1))
+                # f = np.expand_dims(features,axis=2)
+ 
+                save_audio(file)
+                # path = os.path.join("audio1", file.filename)
+                path = 'audio1/' + file.filename + '.wav'
+                mfccs = get_mfccs(path, model.input_shape[-1])
+                mfccs = mfccs.reshape(1, *mfccs.shape)
+                # re = (model.predict(mfccs)[0] > 0.5).astype("int32")
+                pred = model.predict(mfccs)[0]
+                # result = re[0]
+                print(f"result11 : {pred}")
+                print("result :", CAT6[pred.argmax()])
+                
+                # gender detection
+                gmfccs = get_mfccs(path, gmodel.input_shape[-1])
+                gmfccs = gmfccs.reshape(1, *gmfccs.shape)
+                gpred = gmodel.predict(gmfccs)[0]
+                ind = gpred.argmax()
+                gdict = [["female", "woman.png"], ["male", "man.png"]]
+                txt = "Predicted gender: " + gdict[ind][0]
+                print(txt)
 
-            # db.responses.insert_one({
-            #     'url': uploadedResponse['url'],
-            #     'userId': session['user']['_id'],
-            #     'predict': em[result],
-            #     'createdAt': datetime.datetime.now(),
-            # })
-            return em[result]
+                # db.responses.insert_one({
+                #     'url': uploadedResponse['url'],
+                #     'userId': session['user']['_id'],
+                #     'predict': em[result],
+                #     'createdAt': datetime.datetime.now(),
+                # })
+                # return em[result]
+                return CAT6[pred.argmax()]
         else:
             flash('Image Uploaed Failed')
             return redirect(request.url)
