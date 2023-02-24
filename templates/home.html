@@ -46,7 +46,7 @@
                     <h2 style="margin-bottom: 20px; margin-top: 10px;">Select your Audio</h2>
                     <input type="file" name="selectFile" accept="audio/*" required> </br> </br>
                     <span style="padding: 5%; margin-top: 7px;">
-                        <input id="mainBtnload" type="submit" value="Predict" class="btn btn-success">
+                        <input id="predictBtn" type="submit" value="Predict" class="btn btn-success">
                     </span>
                 </form>
             </div>
@@ -56,14 +56,36 @@
                 <i class="fa fa-spinner fa-spin"></i> <b>Loading</b>
             </div>
         </center>
-        <p><strong>New Recordings List:</strong></p> <br>
+        <p><strong>Recent Recordings List:</strong></p> <br>
         <ul id="recordingsList" class="center"></ul>
+        <div class="row">
+            <h6 style="margin-bottom: 13px;" id="resultTxt1"><strong>Analyzing...</strong></h6>
+            <div class="col-6">
+                <img id="mfccsPlot" width="620" height="160"> 
+            </div>
+            <div class="col-6">
+                <img id="spectrogramPloat" width="620" height="160">
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <h6 style="margin-bottom: 13px;" id="resultTxt2"><strong>Predictions:</strong></h6>
+            <div class="col-4">
+                <img id="resultPlot1" width="400" height="400"> 
+            </div>
+            <div class="col-4">
+                <img id="resultPlot2" width="400" height="400">
+            </div>
+            <div class="col-4">
+                <img id="resultPlot3" width="400" height="400"> 
+            </div>
+        </div>
     </div> 
 
     <hr>
     <div class="container">
-        <h6 style="margin-bottom: 13px;"><strong>Predicted Recordings List:</strong></h6>
-        <div>
+        <h6 style="margin-bottom: 13px;"><strong>Predicted Past Recordings List:</strong></h6>
+        <div class="pastAudioList">
             {% for audio in audios %}
                 <audio controls>
                     <source src={{audio.url}} type="audio/wav">

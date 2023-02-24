@@ -120,6 +120,30 @@ button.submit:hover {
     display: none;
 }
 
+/* ----  Result Plot   ----  */
+#resultPlot1 {
+    display: none;
+}
+#resultPlot2 {
+    display: none;
+}
+#resultPlot3 {
+    display: none;
+}
+#resultTxt1 {
+    display: none;
+}
+#resultTxt2 {
+    display: none;
+}
+#mfccsPlot {
+    display: none;
+}
+#spectrogramPloat {
+    display: none;
+}
+
+
 /* ----  Responsiveness   ----  */
 @media (max-width: 780px) {
 

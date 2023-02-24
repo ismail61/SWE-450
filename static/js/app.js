@@ -180,16 +180,40 @@ function createDownloadLink(blob) {
 		}).done(function(data) {
 			console.log(data);
 			if(data) {
+				// result plot
+				let resultTxt1 = document.getElementById('resultTxt1'); 
+				let resultTxt2 = document.getElementById('resultTxt2'); 
+				let resultPlot1 = document.getElementById('resultPlot1'); 
+				let resultPlot2 = document.getElementById('resultPlot2'); 
+				let resultPlot3 = document.getElementById('resultPlot3'); 
+				let mfccsPlot = document.getElementById('mfccsPlot'); 
+				let spectrogramPloat = document.getElementById('spectrogramPloat');
+
+				resultTxt1.style.display = 'block';
+				resultTxt2.style.display = 'block';
 				buttonload.style.display = 'none';
-				alert(`${data} is our expected value.`)
-				window.location.reload();
+
+				// Plot
+				mfccsPlot.style.display = 'block';
+				mfccsPlot.src= `data:image/png;base64, ${data.mfccsPlot}`;
+
+				spectrogramPloat.style.display = 'block';
+				spectrogramPloat.src= `data:image/png;base64, ${data.spectrogramPloat}`;
+
+				resultPlot1.style.display = 'block';
+				resultPlot1.src= `data:image/png;base64, ${data.resultPlot1}`;
+
+				resultPlot2.style.display = 'block';
+				resultPlot2.src= `data:image/png;base64, ${data.resultPlot2}`;
+
+				resultPlot3.style.display = 'block';
+				resultPlot3.src= `data:image/png;base64, ${data.resultPlot3}`;
 			}
 		});
 	})
 	li.appendChild(document.createTextNode (" "))//add a space in between
 	li.appendChild(upload)//add the upload link to li
 
-	//add the li element to the ol
 	recordingsList.appendChild(li);
 }
 
@@ -199,9 +223,22 @@ function fileSelectionSubmitButtonHandling(event) {
 
 	// Loader
 	let buttonload = document.getElementById('buttonload'); 
-	let mainBtnload = document.getElementById('mainBtnload'); 
 	buttonload.style.display = 'block';
-	mainBtnload.disabled = true;
+
+	// result plot
+	let resultTxt1 = document.getElementById('resultTxt1'); 
+	let resultTxt2 = document.getElementById('resultTxt2'); 
+	let resultPlot1 = document.getElementById('resultPlot1'); 
+	// for newly
+	resultPlot1.style.display = 'none';
+	let resultPlot2 = document.getElementById('resultPlot2'); 
+	resultPlot2.style.display = 'none';
+	let resultPlot3 = document.getElementById('resultPlot3'); 
+	resultPlot3.style.display = 'none';
+	let mfccsPlot = document.getElementById('mfccsPlot'); 
+	mfccsPlot.style.display = 'none';
+	let spectrogramPloat = document.getElementById('spectrogramPloat'); 
+	spectrogramPloat.style.display = 'none';
 
 	const form = new FormData(event.target);
 	var filename = new Date().toISOString();
@@ -216,15 +253,32 @@ function fileSelectionSubmitButtonHandling(event) {
 		contentType: false,
 		error: function() {
 			buttonload.style.display = 'none';
-			mainBtnload.disabled = false;
 			alert('Something went wrong!');
 		}
 	}).done(function(data) {
 		console.log(data);
 		if(data) {
+			resultTxt1.style.display = 'block';
+			resultTxt2.style.display = 'block';
 			buttonload.style.display = 'none';
-			alert(`${data} is our expected value.`)
-			window.location.reload();
+
+			// Plot
+			mfccsPlot.style.display = 'block';
+			mfccsPlot.src= `data:image/png;base64, ${data.mfccsPlot}`;
+
+			spectrogramPloat.style.display = 'block';
+			spectrogramPloat.src= `data:image/png;base64, ${data.spectrogramPloat}`;
+
+			resultPlot1.style.display = 'block';
+			resultPlot1.src= `data:image/png;base64, ${data.resultPlot1}`;
+
+			resultPlot2.style.display = 'block';
+			resultPlot2.src= `data:image/png;base64, ${data.resultPlot2}`;
+
+			resultPlot3.style.display = 'block';
+			resultPlot3.src= `data:image/png;base64, ${data.resultPlot3}`;
+			// alert(`${data} is our expected value.`)
+			// window.location.reload();
 		}
 	});
 }
